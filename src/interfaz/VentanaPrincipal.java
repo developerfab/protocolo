@@ -410,6 +410,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         transmisor.setPpt(Integer.parseInt(jtfield_ppt.getText()));
         transmisor.setLpt(Integer.parseInt(jtfield_lpt.getText()));
         transmisor.construir_Frame();
+        transmisor.enviar();
     }//GEN-LAST:event_jbtn_enviar_txActionPerformed
 
     private void jcbox_enqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbox_enqActionPerformed

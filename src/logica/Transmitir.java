@@ -13,7 +13,7 @@ package logica;
 public class Transmitir {
     
     //ATRIBUTOS
-    
+    private Conector conector = new Conector();
     private String informacion =""; //Mensaje a ser enviado
     private int indicador = 10000001; //Indicador del frame
     private int ack; //Reconocimiento de llegada de la informacion.
@@ -200,5 +200,9 @@ public class Transmitir {
                 +Integer.toString(getPpt())+Integer.toString(getLpt())+Integer.toString(getNum())
                 +getInformacion()+Integer.toString(getIndicador());
         setFrame(aux);
+    }
+    
+    public void enviar(){
+        conector.enviarFrame(frame);
     }
 }
