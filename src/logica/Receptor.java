@@ -6,6 +6,8 @@
 
 package logica;
 
+import interfaz.VentanaReceptor;
+
 /** Receptor
  * Esta clase se encarga de recibir la informacion.
  * @author cristian
@@ -23,8 +25,10 @@ public class Receptor {
     private int ppt; //Solicitud para transmision
     private int lpr; //Listo para recibir datos de informacion o control
     private int num; //Numero de trama que esta enviando
-    private int solicitar_conexion = 0;
+    
     private String frame;
+    
+    private VentanaReceptor ventana_receptor=null;
     
     //COSTRUCTOR
     public Receptor(){
@@ -73,14 +77,50 @@ public class Receptor {
         this.ppt = ppt;
     }
     
-    /** recibirFrame
-     *  Este metodo se encarga de recibir el frame enviado por el transmisor
-     * @param frame 
-     */
-    public void recibirFrame(String frame){
-        setFrame(frame);
-        procesarFrame();
-        
+    //gets
+
+    public int getAck() {
+        return ack;
+    }
+
+    public int getCtr() {
+        return ctr;
+    }
+
+    public int getDat() {
+        return dat;
+    }
+
+    public int getEnq() {
+        return enq;
+    }
+
+    public String getFrame() {
+        return frame;
+    }
+
+    public int getIndicador() {
+        return indicador;
+    }
+
+    public String getInformacion() {
+        return informacion;
+    }
+
+    public int getLpr() {
+        return lpr;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public int getPpt() {
+        return ppt;
+    }
+
+    public VentanaReceptor getVentana_receptor() {
+        return ventana_receptor;
     }
     
     /** procesarFrame
@@ -90,8 +130,18 @@ public class Receptor {
         String mensaje[] = frame.split("");
         //indicador:
         setIndicador(Integer.parseInt(partir_frame(0,8,mensaje)));
-        System.out.println(indicador);
-    }
+        setAck(Integer.parseInt(mensaje[9]));
+        setEnq(Integer.parseInt(mensaje[10]));
+        setCtr(Integer.parseInt(mensaje[11]));
+        setDat(Integer.parseInt(mensaje[12]));
+        setPpt(Integer.parseInt(mensaje[13]));
+        setLpr(Integer.parseInt(mensaje[14]));
+        setNum(Integer.parseInt(mensaje[15]));
+        setInformacion(partir_frame(16, mensaje.length-9, mensaje));
+        ventana_receptor = VentanaReceptor.getVentana();
+        ventana_receptor.setVisible(true);
+        ventana_receptor.llenar_campos(this);
+   }
     
     /** partir_frame
      *  Esta funcion se encarga de partir el frame en las seleccion indicada por 
@@ -108,6 +158,7 @@ public class Receptor {
         }
         return str_aux;
     }
+    
     
     
 }

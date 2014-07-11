@@ -540,4 +540,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel label_transmisor;
     // End of variables declaration//GEN-END:variables
 
+    /** mostrar_mensajes
+     *  Este metodo se encarga de crear los mensajes para mostrar en la ventana
+     *  principal.
+     */
+    public void mostrar_mensajes(){
+        if(jtfield_ack.getText()=="1"){
+            
+        }
+    }
 }

@@ -6,19 +6,34 @@
 
 package interfaz;
 
+import logica.Receptor;
+
 /**
  *
  * @author cristian
  */
 public class VentanaReceptor extends javax.swing.JFrame {
+    
+    private static VentanaReceptor miventana = null;
 
     /**
      * Creates new form VentanaReceptor
      */
-    public VentanaReceptor() {
+    private VentanaReceptor() {
         initComponents();
     }
 
+    /** getVentana
+     *  Se hace uso del patron singleton con el fin de mostrar la misma ventana, 
+     *  en base a la misma instancia.
+     * @return VentanaReceptor
+     */
+    public static VentanaReceptor getVentana(){
+        if(miventana==null){
+            miventana = new VentanaReceptor();
+        }
+        return miventana;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,7 +46,7 @@ public class VentanaReceptor extends javax.swing.JFrame {
         label_recepcion = new javax.swing.JLabel();
         label_trama_recibida = new javax.swing.JLabel();
         jtxf_indicador = new javax.swing.JTextField();
-        jtxf_tama_de_datos = new javax.swing.JTextField();
+        jtxf_trama_de_datos = new javax.swing.JTextField();
         jtxf_informacion = new javax.swing.JTextField();
         jtxf_indicador_final = new javax.swing.JTextField();
         label_header = new javax.swing.JLabel();
@@ -81,10 +96,10 @@ public class VentanaReceptor extends javax.swing.JFrame {
             }
         });
 
-        jtxf_tama_de_datos.setEditable(false);
-        jtxf_tama_de_datos.addActionListener(new java.awt.event.ActionListener() {
+        jtxf_trama_de_datos.setEditable(false);
+        jtxf_trama_de_datos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jtxf_tama_de_datosActionPerformed(evt);
+                jtxf_trama_de_datosActionPerformed(evt);
             }
         });
 
@@ -197,7 +212,7 @@ public class VentanaReceptor extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
-                                .addComponent(jtxf_tama_de_datos, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jtxf_trama_de_datos, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jtxf_informacion, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -297,7 +312,7 @@ public class VentanaReceptor extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jtxf_indicador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jtxf_tama_de_datos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jtxf_trama_de_datos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jtxf_informacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jtxf_indicador_final, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -356,9 +371,9 @@ public class VentanaReceptor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jtxf_tama_de_datosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxf_tama_de_datosActionPerformed
+    private void jtxf_trama_de_datosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxf_trama_de_datosActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jtxf_tama_de_datosActionPerformed
+    }//GEN-LAST:event_jtxf_trama_de_datosActionPerformed
 
     private void jtxf_indicadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtxf_indicadorActionPerformed
         // TODO add your handling code here:
@@ -368,6 +383,7 @@ public class VentanaReceptor extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jtfield_indicadorActionPerformed
 
+    
     /**
      * @param args the command line arguments
      */
@@ -420,7 +436,7 @@ public class VentanaReceptor extends javax.swing.JFrame {
     private javax.swing.JTextField jtxf_indicador_final;
     private javax.swing.JTextField jtxf_informacion;
     private javax.swing.JTextField jtxf_mensaje_recibido;
-    private javax.swing.JTextField jtxf_tama_de_datos;
+    private javax.swing.JTextField jtxf_trama_de_datos;
     private javax.swing.JLabel label_ack;
     private javax.swing.JLabel label_ctr;
     private javax.swing.JLabel label_dat;
@@ -442,4 +458,24 @@ public class VentanaReceptor extends javax.swing.JFrame {
     private javax.swing.JLabel label_trama_recibida;
     private javax.swing.JLabel label_tramade;
     // End of variables declaration//GEN-END:variables
+    
+    /** llenar_campos
+     *  Este metodo se encarga de llenar los diferentes datos de la interfaz
+     *  pasados a través del objeto receptor.
+     * @param receptor 
+     */
+    public void llenar_campos(Receptor receptor){
+        //se llena la parte superior de la ventana
+        
+        jtxf_indicador.setText(Integer.toString(receptor.getIndicador()));
+        jtxf_trama_de_datos.setText(Integer.toString(receptor.getAck())+
+                Integer.toString(receptor.getEnq())+Integer.toString(receptor.getCtr())+
+                Integer.toString(receptor.getDat())+Integer.toString(receptor.getPpt())+
+                Integer.toString(receptor.getLpr())+Integer.toString(receptor.getNum()));
+        jtxf_informacion.setText(receptor.getInformacion());
+        jtxf_indicador_final.setText(Integer.toString(receptor.getIndicador()));
+        
+    }
+    
 }
+
