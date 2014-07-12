@@ -123,6 +123,7 @@ public class VentanaReceptor extends javax.swing.JFrame {
 
         jtfield_indicador.setEditable(false);
         jtfield_indicador.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtfield_indicador.setText("10000001");
         jtfield_indicador.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jtfield_indicador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -186,6 +187,7 @@ public class VentanaReceptor extends javax.swing.JFrame {
 
         jtfield_indicador2.setEditable(false);
         jtfield_indicador2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jtfield_indicador2.setText("10000001");
         jtfield_indicador2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         label_semantica.setText("SEMANTICA");
@@ -475,6 +477,19 @@ public class VentanaReceptor extends javax.swing.JFrame {
         jtxf_informacion.setText(receptor.getInformacion());
         jtxf_indicador_final.setText(Integer.toString(receptor.getIndicador()));
         
+    }
+    
+    public void llenar_respuesta(String respuesta, String informacion){
+        System.out.println("info: "+informacion);
+        String rta[] = respuesta.split("");
+        jtfield_ack.setText(rta[1]);
+        jtfield_enq.setText(rta[2]);
+        jtfield_ctr.setText(rta[3]);
+        jtfield_dat.setText(rta[4]);
+        jtfield_ppt.setText(rta[5]);
+        jtfield_lpt.setText(rta[6]);
+        jtfield_num.setText(rta[7]);
+        jtfield_informacion.setText(informacion);
     }
     
 }

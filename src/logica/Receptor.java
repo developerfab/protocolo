@@ -163,6 +163,7 @@ public class Receptor {
         setNum(Integer.parseInt(mensaje[15]));
         setTrama(getAck()+""+getEnq()+""+getCtr()+""+getDat()+""+getPpt()+""+getLpr());
         setInformacion(partir_frame(16, mensaje.length-9, mensaje));
+        System.out.println("informacion: "+getInformacion());
         
    }
     
@@ -193,9 +194,11 @@ public class Receptor {
             //Listo para recibir:
             mensaje_rta = "0010010";
             canal_abierto = true;
+            mostrar_rta_ventana(mensaje_rta, getInformacion());
         }
         if(getTrama().equals("000100")){
             mensaje_rta = "101000";
+            mostrar_rta_ventana(mensaje_rta+""+getFrame(), getInformacion());
         }
         mensaje_rta = getIndicador()+mensaje_rta+getIndicador();
         return mensaje_rta;
@@ -208,5 +211,10 @@ public class Receptor {
         ventana_receptor = VentanaReceptor.getVentana();
         ventana_receptor.setVisible(true);
         ventana_receptor.llenar_campos(this);
+    }
+    
+    public void mostrar_rta_ventana(String respuesta, String informacion){
+        ventana_receptor = VentanaReceptor.getVentana();
+        ventana_receptor.llenar_respuesta(respuesta, informacion);
     }
 }
