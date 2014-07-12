@@ -25,18 +25,29 @@ public class Receptor {
     private int ppt; //Solicitud para transmision
     private int lpr; //Listo para recibir datos de informacion o control
     private int num; //Numero de trama que esta enviando
-    
+    private boolean canal_abierto=false;
     private String frame;
-    
+    private String trama;//segmento del mensaje a enviar y procesar.
+    private static Receptor receptor = null;
     private VentanaReceptor ventana_receptor=null;
     
     //COSTRUCTOR
-    public Receptor(){
+    private Receptor(){
         
     }
     
     //METODOS
 
+    /** getSingleton
+     *  Este metodo se encarga de que solo se cre una instancia para cada conexion
+     * @return Receptor
+     */
+    public static Receptor getSingleton(){
+        if(receptor==null){
+            receptor = new Receptor();
+        }
+        return receptor;
+    }
     public void setAck(int ack) {
         this.ack = ack;
     }
@@ -76,9 +87,17 @@ public class Receptor {
     public void setPpt(int ppt) {
         this.ppt = ppt;
     }
+
+    public void setTrama(String trama) {
+        this.trama = trama;
+    }
     
     //gets
 
+    public String getTrama() {
+        return trama;
+    }
+    
     public int getAck() {
         return ack;
     }
@@ -119,6 +138,10 @@ public class Receptor {
         return ppt;
     }
 
+    public boolean isCanal_abierto() {
+        return canal_abierto;
+    }
+    
     public VentanaReceptor getVentana_receptor() {
         return ventana_receptor;
     }
@@ -128,6 +151,7 @@ public class Receptor {
      */
     public void procesarFrame(){
         String mensaje[] = frame.split("");
+        String aux="";
         //indicador:
         setIndicador(Integer.parseInt(partir_frame(0,8,mensaje)));
         setAck(Integer.parseInt(mensaje[9]));
@@ -137,10 +161,9 @@ public class Receptor {
         setPpt(Integer.parseInt(mensaje[13]));
         setLpr(Integer.parseInt(mensaje[14]));
         setNum(Integer.parseInt(mensaje[15]));
+        setTrama(getAck()+""+getEnq()+""+getCtr()+""+getDat()+""+getPpt()+""+getLpr()+""+getNum());
         setInformacion(partir_frame(16, mensaje.length-9, mensaje));
-        ventana_receptor = VentanaReceptor.getVentana();
-        ventana_receptor.setVisible(true);
-        ventana_receptor.llenar_campos(this);
+        
    }
     
     /** partir_frame
@@ -158,7 +181,29 @@ public class Receptor {
         }
         return str_aux;
     }
+    /** mensajes_respuesta
+     *  Este metodo se encarga de crear los mensajes de respuesta para el 
+     *  transmisor.
+     * @return 
+     */
+    public String mensajes_respuesta(){
+        String mensaje_rta = "";
+        //Permiso para transmitir:
+        if(getTrama().equals("0010100")){
+            //Listo para recibir:
+            mensaje_rta = "0010010";
+            canal_abierto = true;
+        }
+        else if(getTrama().equals("0001001")){
+            mensaje_rta = "1010001";
+        }
+        mensaje_rta = getIndicador()+mensaje_rta+getIndicador();
+        return mensaje_rta;
+    }
     
-    
-    
+    public void mostrar_ventana(){
+        ventana_receptor = VentanaReceptor.getVentana();
+        ventana_receptor.setVisible(true);
+        ventana_receptor.llenar_campos(this);
+    }
 }

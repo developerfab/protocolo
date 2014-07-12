@@ -12,11 +12,12 @@ package logica;
  */
 public class Conector {
     
-    //ATRIBUTOS
+    //ATRIBUTOS    
     
-    private int solicitar_conexion = 0;    
-    private Receptor receptor = new Receptor();
+    private Receptor receptor;
     private static Conector conector = null;
+    private String msn_rta = "";
+    
     //CONSTRUCTOR
     private Conector(){
         
@@ -24,6 +25,11 @@ public class Conector {
     
     //METODOS
     
+    /** getSingleton
+     *  Este metodo se encarga de que solo exista una conexion entre el transmisor
+     *  y el receptor.
+     * @return Conector
+     */
     public static Conector getSingleton(){
         if(conector == null){
             conector = new Conector();
@@ -34,20 +40,21 @@ public class Conector {
      * Este metodo permite a la clase transmitir hacer la solicitud de conexion
      * @return int
      */
-    public void enviarFrame(String frame){
+    public String enviarFrame(String frame){
+        receptor = Receptor.getSingleton();
         receptor.setFrame(frame);
         receptor.procesarFrame();
+        msn_rta = receptor.mensajes_respuesta();
+        //se confirma que se pueda realizar la conexion
+        if(receptor.isCanal_abierto()){
+            receptor.mostrar_ventana();
+            return msn_rta;
+        }
+        else{
+            msn_rta = "Debe establecer una conexion primero";
+        }
+        return msn_rta;
+        
     }       
     
-    /** enviar_frame
-     *  Este metodo se encarga de confirmar si se puede hacer el envio del frame 
-     * @return Boolean
-     */
-    public Boolean enviar_frame(){
-        Boolean retorno = false;
-        if(solicitar_conexion==1){
-            retorno = true;
-        }
-        return retorno;
-    }
 }

@@ -401,6 +401,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_mouse
 
     private void jbtn_enviar_txActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtn_enviar_txActionPerformed
+        
         Transmitir transmisor = new Transmitir();
         transmisor.setInformacion(jtfield_msn_tx.getText());
         transmisor.setAck(Integer.parseInt(jtfield_ack.getText()));
@@ -409,8 +410,16 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         transmisor.setDat(Integer.parseInt(jtfield_dat.getText()));
         transmisor.setPpt(Integer.parseInt(jtfield_ppt.getText()));
         transmisor.setLpt(Integer.parseInt(jtfield_lpt.getText()));
+        try{
+            transmisor.setNum(Integer.parseInt(jtfield_num.getText()));
+        }catch(Exception e){
+            transmisor.setNum(0);
+        }
+        
         transmisor.construir_Frame();
-        transmisor.enviar();
+        mostrar_mensajes_enviados();
+        String rta = transmisor.enviar();        
+        mostrar_mensajes_recibidos(rta);
     }//GEN-LAST:event_jbtn_enviar_txActionPerformed
 
     private void jcbox_enqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbox_enqActionPerformed
@@ -544,9 +553,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
      *  Este metodo se encarga de crear los mensajes para mostrar en la ventana
      *  principal.
      */
-    public void mostrar_mensajes(){
-        if(jtfield_ack.getText()=="1"){
-            
+    public void mostrar_mensajes_enviados(){
+        if(jtfield_ack.getText().equals("1")){
         }
+        if(jtfield_ppt.getText().equals("1")){
+            jtarea_secuencia.setText(jtarea_secuencia.getText()+"\n Trama(Tx): Control, Solicitando permiso para transmitir");
+        }
+    }
+    
+    public void mostrar_mensajes_recibidos(String mensaje){
+        jtarea_secuencia.setText(jtarea_secuencia.getText()+"\n"+mensaje);
     }
 }

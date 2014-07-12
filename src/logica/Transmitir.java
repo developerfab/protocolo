@@ -205,12 +205,20 @@ public class Transmitir {
     /** enviar
      *  Este metodo se encarga de enviar el frame a través de la clase conector.
      */
-    public void enviar(){
+    public String enviar(){
         conector = Conector.getSingleton();
-        conector.enviarFrame(frame);
+        String rta = conector.enviarFrame(frame);
+        rta = procesar_rta(rta);
+        return rta;
     }
     
-    
+    public String procesar_rta(String respuesta){
+        String rta =respuesta;
+        if(respuesta.equals("10000001001001010000001")){
+            rta = "Trama de control, listo para recibir";
+        }
+        return rta;
+    }
     
     
 }
