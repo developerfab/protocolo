@@ -204,6 +204,7 @@ public class Transmitir {
     
     /** enviar
      *  Este metodo se encarga de enviar el frame a través de la clase conector.
+     * @return String
      */
     public String enviar(){
         conector = Conector.getSingleton();
@@ -212,13 +213,43 @@ public class Transmitir {
         return rta;
     }
     
+    /** procesar_rta
+     *  Este metodo se encarga de procesar y asignar un mensaje a la respuesta
+     *  a los bits recibidos.
+     * @param respuesta
+     * @return String
+     */
     public String procesar_rta(String respuesta){
-        String rta =respuesta;
-        if(respuesta.equals("10000001001001010000001")){
+        
+        String arr_rta[] =respuesta.split("");
+        String rta="";
+        int fin = arr_rta.length-9;
+        for(int i=9; i<=fin;i++){
+            rta = rta+arr_rta[i];
+        }
+        if(rta.equals("0010010")){
             rta = "Trama de control, listo para recibir";
+        }
+        if(rta.equals("101000")){
+            rta ="Trama de control, Frame recibido correctamente \n 101000";
         }
         return rta;
     }
     
+    /** partir_frame
+     *  Esta funcion se encarga de partir el frame en las seleccion indicada por 
+     *  el parametro inicio.
+     * @param inicio
+     * @param msn
+     * @param fin
+     * @return 
+     */
+    public String partir_frame(int inicio, int fin, String msn[]){
+        String str_aux="";
+        for(int i = inicio; i<=fin;i++){
+            str_aux = str_aux+msn[i];
+        }
+        return str_aux;
+    }
     
 }

@@ -13,6 +13,12 @@ import logica.Transmitir;
  * @author cristian
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
+    
+    //atributos privados
+    
+    private String mensajes[];
+    private int trama_n = 1;
+    private Transmitir transmisor = new Transmitir();
 
     /**
      * Creates new form Ventana
@@ -141,7 +147,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jtfield_ppt.setText("0");
 
         jlabel_lpt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jlabel_lpt.setText("LPT");
+        jlabel_lpt.setText("LPR");
 
         jtfield_lpt.setEditable(false);
         jtfield_lpt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -215,8 +221,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jlabel_secuencia.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jlabel_secuencia.setText("SECUENCIA DE TRAMAS");
 
-        jtarea_secuencia.setEditable(false);
         jtarea_secuencia.setColumns(20);
+        jtarea_secuencia.setEditable(false);
         jtarea_secuencia.setRows(5);
         jScrollPane1.setViewportView(jtarea_secuencia);
 
@@ -401,25 +407,26 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_mouse
 
     private void jbtn_enviar_txActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtn_enviar_txActionPerformed
-        
-        Transmitir transmisor = new Transmitir();
-        transmisor.setInformacion(jtfield_msn_tx.getText());
-        transmisor.setAck(Integer.parseInt(jtfield_ack.getText()));
-        transmisor.setEnq(Integer.parseInt(jtfield_enq.getText()));
-        transmisor.setCtr(Integer.parseInt(jtfield_ctr.getText()));
-        transmisor.setDat(Integer.parseInt(jtfield_dat.getText()));
-        transmisor.setPpt(Integer.parseInt(jtfield_ppt.getText()));
-        transmisor.setLpt(Integer.parseInt(jtfield_lpt.getText()));
-        try{
-            transmisor.setNum(Integer.parseInt(jtfield_num.getText()));
-        }catch(Exception e){
-            transmisor.setNum(0);
+        System.out.println("entra");
+        if(jtfield_ppt.getText().equals("1")){
+            System.out.println("entra 1");
+            llenar_transmitir(jtfield_msn_tx.getText());
+            transmisor.construir_Frame();
+            mostrar_mensajes_enviados();
+            String rta = transmisor.enviar();        
+            mostrar_mensajes_recibidos(rta);
+        }
+        else if(jtfield_dat.getText().equals("1")){
+            dividir_mensaje();
+            for(int i=0;i<mensajes.length;i++){
+                llenar_transmitir(mensajes[i]);
+                transmisor.construir_Frame();
+                mostrar_mensajes_enviados();
+                String rta = transmisor.enviar()+Integer.toString(trama_n);        
+                mostrar_mensajes_recibidos(rta);
+            }
         }
         
-        transmisor.construir_Frame();
-        mostrar_mensajes_enviados();
-        String rta = transmisor.enviar();        
-        mostrar_mensajes_recibidos(rta);
     }//GEN-LAST:event_jbtn_enviar_txActionPerformed
 
     private void jcbox_enqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbox_enqActionPerformed
@@ -559,9 +566,59 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         if(jtfield_ppt.getText().equals("1")){
             jtarea_secuencia.setText(jtarea_secuencia.getText()+"\n Trama(Tx): Control, Solicitando permiso para transmitir");
         }
+        if(jtfield_dat.getText().equals("1")){
+            jtarea_secuencia.setText(jtarea_secuencia.getText()+"\n Trama(Tx): Datos, Trama de datos"+trama_n);
+            trama_n++;
+        }
     }
     
+    /** mostrar_mensajes_recibidos
+     *  Metodo encargado de mostrar los mensajes recibidos.
+     * @param mensaje 
+     */
     public void mostrar_mensajes_recibidos(String mensaje){
         jtarea_secuencia.setText(jtarea_secuencia.getText()+"\n"+mensaje);
+    }
+    
+    /**dividir_mensaje
+     * Este metodo se encarga de dividir el mensaje en la cantidad de frames requeridos.
+     */
+    public void dividir_mensaje(){
+        mensajes = new String[Integer.parseInt(jtfield_frames.getText())+1];
+        String aux[] = jtfield_msn_tx.getText().split("");
+        String aux2="";
+        int division = aux.length/Integer.parseInt(jtfield_frames.getText());
+        int contador = 0;
+        int contador2 = 0;
+        while(contador<aux.length){
+            for(int i=contador; i<division;i++){
+                aux2 = aux2+aux[i];
+            }
+            contador=contador+division;
+            mensajes[contador2]=aux2;
+            contador2++;
+            aux2="";
+        }
+        mensajes[mensajes.length-2]=mensajes[mensajes.length-2]+mensajes[mensajes.length-1];
+        mensajes[mensajes.length-1]="";
+    }
+    
+    /**llenar_transmitir
+     * Este metodo se encarga de llenar los atributos de la clase transmitir.
+     * @param informacion 
+     */
+    public void llenar_transmitir(String informacion){
+        transmisor.setInformacion(informacion);
+        transmisor.setAck(Integer.parseInt(jtfield_ack.getText()));
+        transmisor.setEnq(Integer.parseInt(jtfield_enq.getText()));
+        transmisor.setCtr(Integer.parseInt(jtfield_ctr.getText()));
+        transmisor.setDat(Integer.parseInt(jtfield_dat.getText()));
+        transmisor.setPpt(Integer.parseInt(jtfield_ppt.getText()));
+        transmisor.setLpt(Integer.parseInt(jtfield_lpt.getText()));
+        try{
+            transmisor.setNum(Integer.parseInt(jtfield_num.getText()));
+        }catch(Exception e){
+            transmisor.setNum(0);
+        }
     }
 }
